@@ -58,21 +58,20 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                slackSend channel: 'channelName',
-                    message: """
-                        *Pipeline Status:* ${currentBuild.currentResult}
-                        *Job Name:* ${env.JOB_NAME}
-                        *Build Number:* ${env.BUILD_NUMBER}
-                        *Build URL:* ${BUILD_URL}
-                        *Committer:* ${env.GIT_COMMITTER_NAME} (${env.GIT_COMMITTER_EMAIL})
-                        *Commit Message:* ${env.GIT_COMMIT}
-                        *Commit Time:* ${env.GIT_COMMITTER_DATE}
-                        *Branch:* ${env.GIT_BRANCH}
-                        """
-            }
-        }
-
     }
+     post {
+                always {
+                    slackSend channel: 'channelName',
+                        message: """
+                            *Pipeline Status:* ${currentBuild.currentResult}
+                            *Job Name:* ${env.JOB_NAME}
+                            *Build Number:* ${env.BUILD_NUMBER}
+                            *Build URL:* ${BUILD_URL}
+                            *Committer:* ${env.GIT_COMMITTER_NAME} (${env.GIT_COMMITTER_EMAIL})
+                            *Commit Message:* ${env.GIT_COMMIT}
+                            *Commit Time:* ${env.GIT_COMMITTER_DATE}
+                            *Branch:* ${env.GIT_BRANCH}
+                            """
+                }
+     }
 }
