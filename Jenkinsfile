@@ -61,7 +61,7 @@ pipeline {
     }
      post {
                 always {
-                    slackSend channel: 'channelName',
+                    slackSend channel: '#jenkins-pipline-backend-notify',
                         message: """
                             *Pipeline Status:* ${currentBuild.currentResult}
                             *Job Name:* ${env.JOB_NAME}
