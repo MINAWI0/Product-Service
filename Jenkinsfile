@@ -6,6 +6,7 @@ pipeline {
     }
     environment {
         REPO_URL = 'https://github.com/MINAWI0/Product-Service.git'
+        MANIFEST_REPO = 'https://github.com/MINAWI0/argo-manifest.git'
         REGISTRY = 'minaouimh/ai'
         REGISTRY_CREDENTIAL = 'dockerhub'
         SONARQUBE_CREDENTIALS_ID = 'sonar'
@@ -58,8 +59,24 @@ pipeline {
                 }
             }
         }
-    }
-     post {
+        stage('Update Manifest') {
+            steps {
+                script {
+                    def id = 'Product-Service'
+                    def imageTag = "${id}-${BUILD_NUMBER}"
+                    git credentialsId: 'github', url: MANIFEST_REPO, branch: 'main'
+                    sh """
+                        git pull origin main
+                        sed -i 's|image: minaouimh/ai:.*|image: minaouimh/ai:${imageTag}|g' spring-boot-deployment.yaml
+                        git add .
+                        git commit -m "Update image to ${imageTag}"
+                        git push origin main
+                    """
+                }
+            }
+        }
+}
+    post {
                 always {
                     slackSend channel: '#jenkins-pipline-backend-notify',
                         message: """
@@ -73,5 +90,5 @@ pipeline {
                             *Branch:* ${env.GIT_BRANCH}
                             """
                 }
-     }
+    }
 }
