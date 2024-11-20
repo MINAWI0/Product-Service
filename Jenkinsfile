@@ -68,6 +68,8 @@ pipeline {
                     sh """
                         git pull origin main
                         sed -i 's|image: minaouimh/ai:.*|image: minaouimh/ai:${imageTag}|g' spring-boot-deployment.yaml
+                        git config --global user.email "jenkins@example.com"
+                        git config --global user.name "Jenkins"
                         git add .
                         git commit -m "Update image to ${imageTag}"
                         git push origin main
