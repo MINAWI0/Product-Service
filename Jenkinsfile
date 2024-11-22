@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         REPO_URL = 'https://github.com/MINAWI0/Product-Service.git'
-        MANIFEST_REPO = 'https://github.com/MINAWI0/argo-manifest.git'
+        MANIFEST_REPO = 'https://github.com/MINAWI0/manifest-argo.git'
         REGISTRY = 'minaouimh/ai'
         REGISTRY_CREDENTIAL = 'dockerhub'
         SONARQUBE_CREDENTIALS_ID = 'sonar'
