@@ -1,34 +1,15 @@
-#spring:
-##  application:
-##    name: Product
-##  datasource:
-##    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/Product?createDatabaseIfNotExist=true
-##    username: ${DB_USERNAME:root}
-##    password: ${DB_PASSWORD:root}
-#  data:
-#    mongodb:
-#      uri: mongodb+srv://minaoui:minaoui@product.eyqho.mongodb.net/?retryWrites=true&w=majority&appName=Product
-#      database: Product
-##  jpa:
-##    hibernate:
-##      ddl-auto: update
-##    show-sql: true
-##    database-platform: org.hibernate.dialect.MySQLDialect
-
 spring:
+  application:
+    name: Product
   datasource:
-    url: jdbc:mysql://localhost:3306/Product?createDatabaseIfNotExist=true
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/Product?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
   jpa:
     hibernate:
-      ddl-auto: update # Use `none`, `validate`, `update`, `create`, or `create-drop` as needed
-    show-sql: true    # Display SQL queries in the console
+      ddl-auto: update
+    show-sql: true
     database-platform: org.hibernate.dialect.MySQLDialect
-    properties:
-      hibernate:
-        format_sql: true # Pretty-printed SQL queries
 
 server:
   port: 8081
