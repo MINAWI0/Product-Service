@@ -66,6 +66,7 @@ pipeline {
             dir('argo-manifest') {
                 git url: MANIFEST_REPO, branch: 'main', credentialsId: 'github'
             }
+            sh 'ls -l'
             sh '''
                 # Update the image tag in the spring-boot-deployment.yaml file
                 sed -i 's#image: minaouimh/ai:Product-Service-[^ ]*#image: ${REGISTRY}:${repoName}-${BUILD_NUMBER}#' spring-boot-deployment.yaml
