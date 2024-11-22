@@ -60,23 +60,26 @@ pipeline {
             }
         }
         stage('Update Manifest') {
-            steps {
-                script {
-                    def id = 'Product-Service'
-                    def imageTag = "${id}-${BUILD_NUMBER}"
-                    git credentialsId: 'github', url: MANIFEST_REPO, branch: 'main'
-                    sh """
-                        git status
-                        sed -i 's|image: minaouimh/ai:.*|image: minaouimh/ai:${imageTag}|g' spring-boot-deployment.yaml
-                        git config --global user.email "jenkins@example.com"
-                        git config --global user.name "Jenkins"
-                        git add .
-                        git commit -m "Update image to ${imageTag}"
-                        git push origin main
-                    """
-                }
+    steps {
+        script {
+            def id = 'Product-Service'
+            def imageTag = "${id}-${BUILD_NUMBER}"
+            withCredentials([usernamePassword(credentialsId: 'github', passwordVariable: 'GITHUB_PASSWORD', usernameVariable: 'GITHUB_USERNAME')]) {
+                git credentialsId: 'github', url: MANIFEST_REPO, branch: 'main'
+                sh """
+                    git status
+                    sed -i 's|image: minaouimh/ai:.*|image: minaouimh/ai:${imageTag}|g' spring-boot-deployment.yaml
+                    git config --global user.email "jenkins@example.com"
+                    git config --global user.name "Jenkins"
+                    git add spring-boot-deployment.yaml
+                    git commit -m "Update image to ${imageTag}"
+                    git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/${MANIFEST_REPO.tokenize('/').last()} main
+                """
             }
         }
+    }
+}
+      
 }
     post {
                 always {
