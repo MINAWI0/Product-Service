@@ -6,7 +6,7 @@ pipeline {
     }
     environment {
         REPO_URL = 'https://github.com/MINAWI0/Product-Service.git'
-        MANIFEST_REPO = 'https://github.com/MINAWI0/manifest-argo.git'
+        MANIFEST_REPO = 'https://github.com/MINAWI0/argo-manifest.git'
         REGISTRY = 'minaouimh/ai'
         REGISTRY_CREDENTIAL = 'dockerhub'
         SONARQUBE_CREDENTIALS_ID = 'sonar'
@@ -59,28 +59,24 @@ pipeline {
                 }
             }
         }
-        stage('Update ArgoCD Manifest Repo') {
-    steps {
-        script {
-            // Clone the manifest repo
-            dir('argo-manifest') {
-                git url: MANIFEST_REPO, branch: 'main', credentialsId: 'github'
+        stage('Update Manifest') {
+            steps {
+                script {
+                    def id = 'Product-Service'
+                    def imageTag = "${id}-${BUILD_NUMBER}"
+                    git credentialsId: 'github', url: MANIFEST_REPO, branch: 'main'
+                    sh """
+                        git status
+                        sed -i 's|image: minaouimh/ai:.*|image: minaouimh/ai:${imageTag}|g' spring-boot-deployment.yaml
+                        git config --global user.email "jenkins@example.com"
+                        git config --global user.name "Jenkins"
+                        git add .
+                        git commit -m "Update image to ${imageTag}"
+                        git push origin main
+                    """
+                }
             }
-            sh 'ls -l'
-            sh '''
-                # Update the image tag in the spring-boot-deployment.yaml file
-                sed -i 's#image: minaouimh/ai:Product-Service-[^ ]*#image: ${REGISTRY}:${repoName}-${BUILD_NUMBER}#' spring-boot-deployment.yaml
-            '''
-            sh '''
-                git config user.name "Jenkins"
-                git config user.email "jenkins@example.com"
-                git add spring-boot-deployment.yaml
-                git commit -m "Update image tag for ${repoName}-${BUILD_NUMBER}"
-                git push origin main
-            '''
         }
-    }
-}
 }
     post {
                 always {
