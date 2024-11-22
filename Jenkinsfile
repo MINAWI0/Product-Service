@@ -73,7 +73,7 @@ pipeline {
                     git config --global user.name "Jenkins"
                     git add spring-boot-deployment.yaml
                     git commit -m "Update image to ${imageTag}"
-                    git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/${MANIFEST_REPO.tokenize('/').last()} main
+                    git push https://${GITHUB_USERNAME}:${GITHUB_PASSWORD}@github.com/MINAWI0/manifest-argo.git main
                 """
             }
         }
